@@ -10,4 +10,8 @@ export DOCKER_TLS_VERIFY=1
 
 docker pull arekinath/thing:latest
 docker rm -f thing
-docker run -d --name=thing --network=zones arekinath/thing:latest
+docker run -d \
+  --name=thing \
+  -p 80 -p 443 \
+  --network=zones \
+  arekinath/thing:latest
