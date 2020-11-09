@@ -4,6 +4,7 @@
 # We just redirect everything to HTTPS by default.
 #
 server {
+    listen 80 default_server;
     server_name  _;
     root         /var/www/htdocs;
 
