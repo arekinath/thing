@@ -1,0 +1,43 @@
+#
+# This server block handles incoming plaintext HTTP connections on
+# port 443. For zones operating on private IP addresses (the default)
+# this is where requests that went to https://*.uqcloud.net will
+# be sent by the EAIT loadbalancers.
+#
+server {
+    listen 443 default_server;
+
+    server_name  _;
+    root         /var/www/htdocs;
+
+    #
+    # These are needed to make nginx pretend that the request
+    # was received over HTTPS.
+    #
+    port_in_redirect off;
+    set $_scheme https;
+    set $_https on;
+
+    #
+    # Activate SSO support
+    #
+    #include "/etc/nginx/set_cookie.conf";
+    #rewrite_by_lua_file "/usr/share/nginx/lua/auth_filter.lua";
+    #access_log /var/log/nginx/access.log uq_combined;
+
+    #
+    # Deciding which application server backend should handle
+    # the request is delegated to the enabled "framework" config
+    # file. These should be symlinks into the frameworks-available
+    # directory.
+    #
+    # It is recommended to use the "webprojctl" to enable and
+    # disable frameworks.
+    #
+    #include /etc/nginx/frameworks-enabled/*;
+
+    error_page   500 502 503 504  /50x.html;
+    location = /50x.html {
+        root  /usr/share/nginx/html;
+    }
+}

@@ -1,0 +1,26 @@
+#
+# This server block handles plain http:// requests without SSL.
+#
+# We just redirect everything to HTTPS by default.
+#
+server {
+    server_name  _;
+    root         /var/www/htdocs;
+
+    set $_https '';
+    set $_scheme http;
+
+    location / {
+        rewrite ^ https://$http_host$request_uri? permanent;
+    }
+
+    #
+    # If you want for some reason to have plain HTTP requests handled
+    # by your application server, you can uncomment these directives
+    # here and remove the location / {} block above.
+    #
+    #include "/etc/nginx/set_cookie.conf";
+    #rewrite_by_lua_file "/usr/share/nginx/lua/auth_filter.lua";
+    #access_log /var/log/nginx/access.log uq_combined;
+    #include /etc/nginx/frameworks-enabled/*;
+}
